@@ -1,14 +1,15 @@
 ﻿#requires -Version 5.1
 <#
 .SYNOPSIS
-    NVIDIA Omniverse Kit-CAE v2.1.2를 복제, 빌드하고 바탕화면 바로가기를 생성합니다.
+    NVIDIA Omniverse Kit-CAE v3.0.0을 복제, 빌드하고 바탕화면 바로가기를 생성합니다.
 
 .DESCRIPTION
     기본 작업:
     1. https://github.com/NVIDIA-Omniverse/kit-cae 저장소를 복제합니다.
-    2. v2.1.2 태그를 detached HEAD 상태로 체크아웃합니다.
-    3. repo.bat build -r 명령으로 릴리스 빌드를 수행합니다.
-    4. VTK 지원을 위해 repo.bat pip_download를 수행합니다.
+    2. v3.0.0 태그를 detached HEAD 상태로 체크아웃합니다.
+    3. 이전 버전의 빌드 산출물이 섞이지 않도록 repo.bat build -rx 명령으로
+       깨끗한 릴리스 빌드를 수행합니다.
+    4. 레거시(Kit-CAE 2.0 이하) 스테이지 지원을 위해 repo.bat pip_download를 수행합니다.
     5. 다음 바탕화면 바로가기를 생성합니다.
        - CAE KIT          : repo.bat launch -n omni.cae.kit
        - CAE KIT with VTK : repo.bat launch -n omni.cae_vtk.kit
@@ -18,21 +19,21 @@
     %USERPROFILE%\kit-cae
 
 .EXAMPLE
-    powershell.exe -ExecutionPolicy Bypass -File ".\04. Install-KitCAE-2.1.2.ps1"
+    powershell.exe -ExecutionPolicy Bypass -File ".\04. Install-KitCAE-3.0.0.ps1"
 
 .EXAMPLE
     # 설치 폴더 변경
-    powershell.exe -ExecutionPolicy Bypass -File ".\04. Install-KitCAE-2.1.2.ps1" `
+    powershell.exe -ExecutionPolicy Bypass -File ".\04. Install-KitCAE-3.0.0.ps1" `
         -InstallDir C:\NVIDIA\kit-cae
 
 .EXAMPLE
-    # VTK 선택적 패키지 설치 생략
-    powershell.exe -ExecutionPolicy Bypass -File ".\04. Install-KitCAE-2.1.2.ps1" `
+    # 레거시 스테이지용 선택적 Python 패키지 설치 생략
+    powershell.exe -ExecutionPolicy Bypass -File ".\04. Install-KitCAE-3.0.0.ps1" `
         -SkipOptionalDependencies
 
 .EXAMPLE
     # 설치 후 CAE KIT 자동 실행 생략
-    powershell.exe -ExecutionPolicy Bypass -File ".\04. Install-KitCAE-2.1.2.ps1" `
+    powershell.exe -ExecutionPolicy Bypass -File ".\04. Install-KitCAE-3.0.0.ps1" `
         -NoLaunch
 #>
 
@@ -53,7 +54,7 @@ $ErrorActionPreference = 'Stop'
 
 $RepositoryUrl = 'https://github.com/NVIDIA-Omniverse/kit-cae.git'
 $RepositoryName = 'NVIDIA-Omniverse/kit-cae'
-$TargetTag = 'v2.1.2'
+$TargetTag = 'v3.0.0'
 
 function Write-Step {
     param(
@@ -605,24 +606,24 @@ else {
 Write-Step 'Kit-CAE 릴리스 빌드'
 
 Invoke-RepoCommand `
-    -Arguments @('build', '-r') `
+    -Arguments @('build', '-rx') `
     -RepositoryDirectory $resolvedInstallDir
 
 Write-Host '릴리스 빌드가 완료되었습니다.' -ForegroundColor Green
 
 if (-not $SkipOptionalDependencies) {
-    Write-Step 'VTK 및 선택적 Python 의존성 설치'
+    Write-Step '레거시 스테이지용 선택적 Python 의존성 설치'
 
     Invoke-RepoCommand `
         -Arguments @('pip_download') `
         -RepositoryDirectory $resolvedInstallDir
 
-    Write-Host 'VTK 선택적 의존성 설치가 완료되었습니다.' -ForegroundColor Green
+    Write-Host '레거시 스테이지용 선택적 의존성 설치가 완료되었습니다.' -ForegroundColor Green
 }
 else {
     Write-Host ''
-    Write-Host '-SkipOptionalDependencies 옵션으로 VTK 선택적 의존성 설치를 생략했습니다.' -ForegroundColor Yellow
-    Write-Host 'CAE KIT with VTK 실행 시 VTK 기능이 비활성화될 수 있습니다.' -ForegroundColor Yellow
+    Write-Host '-SkipOptionalDependencies 옵션으로 레거시 선택적 의존성 설치를 생략했습니다.' -ForegroundColor Yellow
+    Write-Host '현재 VTK/EDEM 파일은 기본 앱의 네이티브 OpenUSD 플러그인으로 열 수 있습니다.' -ForegroundColor Yellow
 }
 
 Write-Step '바탕화면 바로가기 생성'
