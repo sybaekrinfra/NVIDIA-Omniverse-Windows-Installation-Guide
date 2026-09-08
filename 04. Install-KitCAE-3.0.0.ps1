@@ -247,6 +247,10 @@ function Invoke-RepoCommand {
     $env:PYTHONUTF8 = '1'
     $env:PYTHONIOENCODING = 'utf-8'
 
+    # 사내 프록시나 사설 루트 CA 환경에서도 uv가 Windows 인증서 저장소를
+    # 사용해 HTTPS 인증서를 검증할 수 있도록 합니다.
+    $env:UV_SYSTEM_CERTS = 'true'
+
     $quotedRepoBat = '"' + $repoBat + '"'
     $commandText = "chcp 65001 > nul && call $quotedRepoBat $($Arguments -join ' ')"
     $previousLocation = Get-Location
@@ -380,6 +384,7 @@ function New-KitCaeLauncher {
 setlocal
 set "PYTHONUTF8=1"
 set "PYTHONIOENCODING=utf-8"
+set "UV_SYSTEM_CERTS=true"
 chcp 65001 > nul
 cd /d "%~dp0"
 call "%~dp0repo.bat" launch -n $KitName
