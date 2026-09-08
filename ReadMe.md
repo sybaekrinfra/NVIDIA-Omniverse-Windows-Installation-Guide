@@ -24,5 +24,5 @@ Isaac Sim ZIP 파일을 BITS로 다운로드할 때는 진행률(%), 받은 용�
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\01. Install-GitAndLFS.ps1"
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\02. Install-PythonAndPip.ps1"
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\03. Install-IsaacSim-6.0.1.ps1"
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\04. Install-KitCAE-3.0.0.ps1"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\04. Install-KitCAE-2.1.2.ps1"
 ```

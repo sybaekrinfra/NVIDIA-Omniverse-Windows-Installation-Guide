@@ -68,8 +68,8 @@ $steps = @(
     }
     [pscustomobject]@{
         Number = 4
-        Name = 'NVIDIA Omniverse Kit-CAE 3.0.0 설치'
-        Path = Join-Path $PSScriptRoot '04. Install-KitCAE-3.0.0.ps1'
+        Name = 'NVIDIA Omniverse Kit-CAE 2.1.2 설치'
+        Path = Join-Path $PSScriptRoot '04. Install-KitCAE-2.1.2.ps1'
         Arguments = @('-NoLaunch')
     }
 )
